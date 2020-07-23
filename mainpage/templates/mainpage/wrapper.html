@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-BY-Compatible" content="ie=edge">
+    <title>Конфигурации тюнинга автомобилей</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/mystyle.css' %}" type="text/css">
+  </head>
+
+  <body class="bg-white">
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 back-red border-bottom shadow-sm">
+      <h5 class="my-0 mr-md-auto font-weight-bold"><a href="/" class="font-logo nav-item"><img src="{% static 'mainpage/images/wrapperlogo.png' %}">CarsConfig</a></h5>
+      <!-- <nav class="my-2 my-md-0 mr-md-3"> -->
+      <nav class="main-nav">
+        <ul class="navbar">
+          <li class="nav-item"><a href="/contact" class="nav-item">Контакты</a></li>
+          <li class="nav-item"><a href="/configs" class="nav-item">Конфигурации тюнинга</a></li>
+          {% if user.is_authenticated %}
+            <li class="nav-item"><a href="/{{user.id}}" class="nav-item">{{ user.get_username }}</a></li>
+            <li class="nav-item"><a href="{% url 'logout'%}?next=/" class="nav-item">Выйти</a></li>
+          {% else %}
+            <li class="nav-item"><a href="{% url 'login'%}?next={{request.path}}" class="nav-item">Войти</a></li>
+            <li class="nav-item"><a href="/accounts/register" class="nav-item">Создать аккаунт</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
+    <br><br>
+  </body>
+</html>

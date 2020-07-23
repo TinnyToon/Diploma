@@ -1,0 +1,123 @@
+{% extends "mainpage/wrapper.html" %}
+
+
+{% block content %}
+
+    <form action="" method="post">
+      {% csrf_token %}
+      <div>
+        {% for field in form %}
+        <div class="form-group">
+            {{field.label_tag}}
+            <div>{{field}}</div>
+        </div>
+        {% endfor %}
+      </div>
+      <button type="submit" class="btn btn-outline-success">Далее</button>
+    </form>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script>
+      $("select").addClass("custom-select");
+      var engine = $("#id_engine").val();
+
+      if (engine == "Default") {
+        $("button").prop("disabled", true);
+      }
+
+      $("#id_engine").change(function () {
+        var eng = $("#id_engine").val();
+
+        if (eng == "Default") {
+          $("button").prop("disabled", true);
+        }
+        else {
+          $("button").prop("disabled", false);
+        }
+      })
+
+      //AJAX(Get models by make)
+      $("#id_make").change(function () {
+
+        $.ajax({
+          type: "GET",
+          url: "check_make",
+          data: {
+            'make': $("#id_make").val(),
+          },
+          dataType: "text",
+          cache: false,
+          success: function (data) {
+            $(".removable-model").remove();
+            $(".removable-gen").remove();
+            $(".removable-engine").remove();
+            var parseData = data.slice(0, -6);
+            var splitData = parseData.split("__br__");
+            for (field in splitData) {
+              if (!(splitData[field] == "")) {
+                $("#id_model").append(
+                  $('<option class="removable-model">' + splitData[field] + '</option>')
+                );
+              }
+            }
+          }
+        });
+      })
+
+      //AJAX(Get generations by model)
+      $("#id_model").change(function () {
+
+        $.ajax({
+          type: "GET",
+          url: "check_model",
+          data: {
+            'make': $("#id_make").val(),
+            'model': $("#id_model").val(),
+          },
+          dataType: "text",
+          cache: false,
+          success: function (data) {
+            $(".removable-gen").remove();
+            $(".removable-engine").remove();
+            var parseData = data.slice(0, -6);
+            var splitData = parseData.split("__br__");
+            for (field in splitData) {
+              if (!(splitData[field] == "")) {
+                $("#id_generation").append(
+                  $('<option class="removable-gen">' + splitData[field] + '</option>')
+                );
+              }
+            }
+          }
+        });
+      })
+
+      //AJAX(Get engines by generation)
+      $("#id_generation").change(function () {
+
+        $.ajax({
+          type: "GET",
+          url: "check_generation",
+          data: {
+            'make': $("#id_make").val(),
+            'model': $("#id_model").val(),
+            'generation': $('#id_generation').val(),
+          },
+          dataType: "text",
+          cache: false,
+          success: function (data) {
+            $(".removable-engine").remove();
+            var parseData = data.slice(0, -6);
+            var splitData = parseData.split("__br__");
+            for (field in splitData) {
+              if (!(splitData[field] == "")) {
+                $("#id_engine").append(
+                  $('<option class="removable-engine">' + splitData[field] + '</option>')
+                );
+              }
+            }
+          }
+        });
+      })
+    </script>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "mainpage/wrapper.html" %}
+
+{% block content %}
+  <div class="myContacts">
+    <div id="myConfig">
+      <h2>Уважаемые посетители!</h2>
+      <h4>
+        Для улучшения качества нашего сайта присылайте ваши пожелания и замечания на электронный адрес: carsconfigby@mail.ru
+      </h4>
+    </div>
+    {% load static %}
+    <img src="{% static 'mainpage/images/contact.jpg' %}" >
+  </div>
+{% endblock %}

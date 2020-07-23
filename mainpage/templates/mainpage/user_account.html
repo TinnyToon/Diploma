@@ -1,0 +1,32 @@
+{% extends "mainpage/wrapper.html" %}
+{% block content %}
+
+<div>
+  <h3>Пользователь:</h3>
+  <div id="myConfig">
+    <h4>{{ user.username }}</h4>
+  </div>
+  <h3>Имя:</h3>
+  <div id="myConfig">
+    <h4>{{ user.first_name }}</h4>
+  </div>
+  <h3>Фамилия:</h3>
+  <div id="myConfig">
+    <h4>{{ user.last_name }}</h4>
+  </div>
+  <h3>Email:</h3>
+  <div id="myConfig">
+    <h4>{{ user.email }}</h4>
+  </div>
+</div>
+<br>
+<form action="" method="post">
+  {% csrf_token %}
+  <a href="/configs/new_config/phase1/{{user.id}}" class="btn btn-outline-success">Добавить новую конфигурацию</a>
+  <a href="/{{user.id}}/configs" class="btn btn-outline-primary">Просмотреть мои конфигурации</a>
+  <a href="/{{user.id}}/change_profile" class="btn btn-outline-info">Редактировать</a>
+
+  <input type="hidden" value="{{user.id}}" name="id">
+  <input type="submit" value="Удалить" class="btn btn-outline-danger" onclick="return confirm('Вы уверены?')">
+</form>
+{% endblock %}

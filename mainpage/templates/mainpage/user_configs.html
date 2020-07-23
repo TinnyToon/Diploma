@@ -1,0 +1,74 @@
+{% extends "mainpage/wrapper.html" %}
+
+
+{% block content %}
+  <br>
+  <h4>Ваши конфигурации:</h4>
+  <div>
+    {% if isempty %}
+      <h6>В данный момент у вас нету конфигураций тюнинга</h6>
+      <a href="{{report}}" class="btn btn-warning">&laquo; Вернуться к профилю</a>
+    {% endif %}
+    {% for config in s1configs %}
+      {% for field in config %}
+        <div id="myList">
+          <h2 class="myListText"><a href="http://127.0.0.1:8000/configs/config/stage1/{{field.id}}">{{field}}</a></h2>
+          <h4 class="myListText">Название: {{field.name}}</h4>
+          <p class="myListText">Описание: {{field.description}}</p>
+          <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" value="{{field.id}}" name="id">
+            <input type="hidden" value="stage1" name="config">
+            <input type="submit" value="Удалить" class="btn btn-outline-danger" onclick="return confirm('Вы уверены?')">
+          </form>
+        </div>
+      {% endfor %}
+    {% endfor %}
+    {% for config in s2configs %}
+      {% for field in config %}
+        <div id="myList">
+          <h2 class="myListText"><a href="http://127.0.0.1:8000/configs/config/stage2/{{field.id}}">{{field}}</a></h2>
+          <h4 class="myListText">Название: {{field.name}}</h4>
+          <p class="myListText">Описание: {{field.description}}</p>
+          <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" value="{{field.id}}" name="id">
+            <input type="hidden" value="stage2" name="config">
+            <input type="submit" value="Удалить" class="btn btn-outline-danger" onclick="return confirm('Вы уверены?')">
+          </form>
+        </div>
+      {% endfor %}
+    {% endfor %}
+    {% for config in s3configs %}
+      {% for field in config %}
+        <div id="myList">
+          <h2 class="myListText"><a href="http://127.0.0.1:8000/configs/config/stage3/{{field.id}}">{{field}}</a></h2>
+          <h4 class="myListText">Название: {{field.name}}</h4>
+          <p class="myListText">Описание: {{field.description}}</p>
+          <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" value="{{field.id}}" name="id">
+            <input type="hidden" value="stage3" name="config">
+            <input type="submit" value="Удалить" class="btn btn-outline-danger" onclick="return confirm('Вы уверены?')">
+          </form>
+        </div>
+      {% endfor %}
+    {% endfor %}
+    {% for config in s3plusconfigs %}
+      {% for field in config %}
+        <div id="myList">
+          <h2 class="myListText"><a href="http://127.0.0.1:8000/configs/config/stage3plus/{{field.id}}">{{field}}</a></h2>
+          <h4 class="myListText">Название: {{field.name}}</h4>
+          <p class="myListText">Описание: {{field.description}}</p>
+          <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" value="{{field.id}}" name="id">
+            <input type="hidden" value="stage3plus" name="config">
+            <input type="submit" value="Удалить" class="btn btn-outline-danger" onclick="return confirm('Вы уверены?')">
+          </form>
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+  <br><br><br>
+{% endblock %}

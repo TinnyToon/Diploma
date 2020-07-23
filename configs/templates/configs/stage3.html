@@ -1,0 +1,204 @@
+{% extends "mainpage/wrapper.html" %}
+
+
+{% block content %}
+  <div>
+    <div id="myConfig" style="text-align: center;">
+      <h1>Конфигурация 3-ей стадии</h1>
+    </div>
+    <h3>Название:</h3>
+    <div id="myConfig">
+      <h4>{{stage3.name}}</h4>
+    </div>
+    <h3>Описание:</h3>
+    <div id="myConfig">
+      <h5>{{stage3.description}}</h5>
+    </div>
+    <h3>Турбина(Компрессор):</h3>
+    <div id="myConfig">
+      <h4>{{stage3.turbocharger}}</h4>
+    </div>
+    <h3>Пользователь:</h3>
+    <div id="myConfig">
+      <h4>{{name_user}}</h4>
+    </div>
+    <h3>Автомобиль:</h3>
+    <div id="myConfig">
+      <h5>Марка: {{auto.make}}</h5>
+      <h5>Модель: {{auto.model}}</h5>
+      <h5>Поколение: {{auto.generation}}</h5>
+      <h5>Двигатель: {{auto.engine}}</h5>
+    </div>
+  </div>
+
+  <div id="power" style="height: 400px;"></div>
+  <div id="torque" style="height: 400px;"></div>
+  <br>
+  {% if user.is_authenticated %}
+    <div class="rating" id="el_555">
+      <div>
+        <p>Оценка прироста характеристик</p>
+      </div>
+      <div>
+        <div class="star_charact"></div>
+        <div class="star_charact"></div>
+        <div class="star_charact"></div>
+        <div class="star_charact"></div>
+        <div class="star_charact"></div>
+      </div>
+      <div>
+        <p>Оценка надежности конфигурации</p>
+      </div>
+      <div>
+        <div class="star_reliability"></div>
+        <div class="star_reliability"></div>
+        <div class="star_reliability"></div>
+        <div class="star_reliability"></div>
+        <div class="star_reliability"></div>
+      </div>
+      <br>
+      <div>
+        <p id="star_rating_charact">Прирост характеристик: {{charact_count}}</p>
+      </div>
+      <div>
+        <p id="star_rating_reliability">Надежность конфигурации: {{reliability_count}}</p>
+      </div>
+      <div>
+        <p id="star_votes">Оценили: {{marks_count}}</p>
+      </div>
+      <div>
+        <p id="vote_err" style="color: red;"></p>
+      </div>
+      <button id="rate_btn" class="btn btn-outline-success">Отправить оценки</button>
+    </div>
+    <div id="star_message"></div>
+    <br>
+  {% endif %}
+  <span>
+    <a href="http://127.0.0.1:8000/configs/config/stage2/{{stage2.id}}" class="btn btn-outline-info">
+      Предыдущая стадия &laquo;
+    </a>
+  </span>
+  <br><br><br>
+  {% load static %}
+  <style>
+    .rating {
+      width: 200px;
+      border-radius: 4px;
+      box-shadow: 0 0 2px 1px #333333;
+      margin: 10px auto;
+      padding: 10px 20px;
+      text-align: center;
+    }
+    .star_charact {
+      float: left;
+      width: 30px;
+      height: 30px;
+      margin: 0;
+      cursor: pointer;
+      background: url({% static 'marks/images/star.png' %});
+    }
+    .star2_charact { background: url({% static 'marks/images/star2.png' %}); }
+    .star_reliability {
+      float: left;
+      width: 30px;
+      height: 30px;
+      margin: 0;
+      cursor: pointer;
+      background: url({% static 'marks/images/star.png' %});
+    }
+    .star2_reliability { background: url({% static 'marks/images/star2.png' %}); }
+    #star_message { text-align: center; }
+  </style>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://www.google.com/jsapi"></script>
+  <script>
+   google.load("visualization", "1", {packages:["corechart"]});
+   google.setOnLoadCallback(drawChart);
+   function drawChart() {
+      var power_data = google.visualization.arrayToDataTable([
+        ['Мощность', 'Заводская мощность', '1-ая стадия', '2-ая стадия', '3-я стадия'],
+        ['', {{auto.power}}, {{stage1.new_power}}, {{stage2.new_power}}, {{stage3.new_power}}]
+      ]);
+      var power_options = {
+        title: 'Увеличение мощности авто',
+        hAxis: {title: 'Мощность'},
+        vAxis: {title: 'Лошадинных сил'}
+      };
+      var torque_data = google.visualization.arrayToDataTable([
+        ['Крутящий момент', 'Заводской крутящий момент', '1-ая стадия', '2-ая стадия', '3-я стадия'],
+        ['', {{auto.torque}}, {{stage1.new_torque}}, {{stage2.new_torque}}, {{stage3.new_torque}}]
+      ]);
+      var torque_options = {
+        title: 'Увеличение крутящего момента авто',
+        hAxis: {title: 'Крутящий момент'},
+        vAxis: {title: 'Нм'}
+      };
+      var chart_power = new google.visualization.ColumnChart(document.getElementById('power'));
+      chart_power.draw(power_data, power_options);
+      var chart_torque = new google.visualization.ColumnChart(document.getElementById('torque'));
+      chart_torque.draw(torque_data, torque_options);
+   }
+  </script>
+  <script>
+      $(".star_charact").on("mouseover", function(){
+        if ($(".star_charact").hasClass("rated")==false) {
+            $(".star_charact").slice(0, $(".star_charact").index(this)+1).addClass("star2_charact");
+        }
+      });
+      $(".star_charact").on("mouseout", function(){
+        if ($(".star_charact").hasClass("rated")==false) {
+            $(".star_charact").slice(0, $(".star_charact").index(this)+1).removeClass("star2_charact");
+        }
+      });
+      $(".star_reliability").on("mouseover", function(){
+        if ($(".star_reliability").hasClass("rated")==false) {
+            $(".star_reliability").slice(0, $(".star_reliability").index(this)+1).addClass("star2_reliability");
+        }
+      });
+      $(".star_reliability").on("mouseout", function(){
+        if ($(".star_reliability").hasClass("rated")==false) {
+            $(".star_reliability").slice(0, $(".star_reliability").index(this)+1).removeClass("star2_reliability");
+        }
+      });
+      $(".star_charact").click( function() {
+          $(".star_charact").addClass("rated");
+      });
+      $(".star_reliability").click( function() {
+          $(".star_reliability").addClass("rated");
+      });
+
+      $("#rate_btn").click( function () {
+        var rate_charact = $(".star2_charact").length
+        var rate_reliability = $(".star2_reliability").length
+        var config = {{stage3.id}}
+        var user = {{user.id}}
+        $.ajax({
+          type: "GET",
+          url: "rate_stage3",
+          data: {
+            'rate_charact': rate_charact,
+            'rate_reliability': rate_reliability,
+            'user': user,
+            'config': config,
+          },
+          dataType: "text",
+          cache: false,
+          success: function (data) {
+            if (data.slice(0, 7) == "__acc__") {
+              var parseData = data.substring(7);
+              var splitData = parseData.split("__br__");
+              $("#star_rating_charact").text("Прирост характеристик: " + splitData[1]);
+              $("#star_rating_reliability").text("Надежность конфигурации: " + splitData[2]);
+              $("#star_votes").text("Оценили: " + splitData[0]);
+            }
+            else if (data.slice(0, 7) == "__err__") {
+              var parseData = data.substring(7);
+              $("#vote_err").text(parseData);
+            }
+          }
+        });
+      });
+  </script>
+{% endblock %}
